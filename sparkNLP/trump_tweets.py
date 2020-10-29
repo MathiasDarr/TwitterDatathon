@@ -9,7 +9,8 @@ import pyspark as ps
 from pyspark.sql.types import LongType, IntegerType, ArrayType, StringType, BooleanType
 from pyspark.ml.feature import CountVectorizer, IDF
 from pyspark.sql.functions import udf
-from sparkNLP.construct_spark_dataframe import getSparkInstance, create_tweets_dataframe, download_parquet_files
+from sparkNLP.utils.construct_spark_dataframe import create_tweets_dataframe, download_parquet_files
+from sparkNLP.utils.sparkSession import getSparkInstance
 from sparkNLP.identify_language import detect_language, tokenize
 
 #download_parquet_files('trump', [1028])
