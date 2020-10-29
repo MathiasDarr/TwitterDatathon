@@ -36,14 +36,15 @@ public class TweetsAvroProducerThread implements Runnable {
 
     private final ArrayBlockingQueue<Status> statusQueue;
 
-    public TweetsAvroProducerThread(AppConfig appConfig, ArrayBlockingQueue<Status> statusQueue, CountDownLatch latch){
+    public TweetsAvroProducerThread(AppConfig appConfig, ArrayBlockingQueue<Status> statusQueue, CountDownLatch latch, String topic){
 
         this.statusQueue = statusQueue;
         this.appConfig = appConfig;
         this.latch = latch;
         this.kafkaProducer = createKafkaProducer(appConfig);
-        this.targetTopic = appConfig.getTweetTopicName();
+        this.targetTopic = topic;
         this.recordCount +=1;
+
     }
 
     public KafkaProducer<Long, Tweet> createKafkaProducer(AppConfig appConfig){
@@ -64,29 +65,14 @@ public class TweetsAvroProducerThread implements Runnable {
     public void run() {
 
         int tweetCount = 0;
-        Tweet.Builder tweetBuilder = Tweet.newBuilder();
 
-        tweetBuilder.setScreename("Hello");
-        tweetBuilder.setName("So;l");
-        tweetBuilder.setLocation("Location");
-
-        tweetBuilder.setTweetContent("content");
-        tweetBuilder.setTweetTime(new DateTime());
-        tweetBuilder.setId(2);
-
-
-        try {
-            kafkaProducer.send(new ProducerRecord<Long, Tweet>("kafka-tweets", tweetBuilder.build()));
-        }catch (Exception e){
-            System.out.println(e);
-        }
         while(latch.getCount() >0 ) {
             try {
                 if(statusQueue.size()>0){
                     Status status = statusQueue.poll();
                     tweetCount +=1;
                     Tweet tweet = statusToTweet(status, tweetCount);
-                    kafkaProducer.send(new ProducerRecord<>("kafka-tweets", tweet));
+                    kafkaProducer.send(new ProducerRecord<>(targetTopic, tweet));
                 }else{
                     Thread.sleep(200);
                 }

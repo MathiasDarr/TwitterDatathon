@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.Status;
 import org.mddarr.tweets.producer.AppConfig;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -16,8 +18,8 @@ public class TwitterKafkaProducerMain {
     private Logger log = LoggerFactory.getLogger(TwitterKafkaProducerMain.class.getSimpleName());
     private ExecutorService executor;
     private CountDownLatch latch;
-    private TweetStreamsThread tweetStreams;
-    private TweetsAvroProducerThread tweetsProducer;
+    private ArrayList<TweetsAvroProducerThread> avroProducerThreads;
+//    private TweetsAvroProducerThread tweetsProducer;
     private TweetStreamsThread tweetsThread;
     public static void main(String[] args) {
         TwitterKafkaProducerMain app = new TwitterKafkaProducerMain(args);
@@ -26,12 +28,24 @@ public class TwitterKafkaProducerMain {
 
     private TwitterKafkaProducerMain(String[] arguments){
         AppConfig appConfig = new AppConfig(ConfigFactory.load(), arguments);
-
-        latch = new CountDownLatch(2);
-        executor = Executors.newFixedThreadPool(2);
+        int number_of_topics = appConfig.getTopics().size();
+        latch = new CountDownLatch(number_of_topics+1);
+        executor = Executors.newFixedThreadPool(number_of_topics+1);
         ArrayBlockingQueue<Status> statusQueue = new ArrayBlockingQueue<Status>(appConfig.getQueuCapacity());
-        tweetsThread = new TweetStreamsThread(appConfig, statusQueue, latch);
-        tweetsProducer = new TweetsAvroProducerThread(appConfig,statusQueue,latch);
+
+        avroProducerThreads = new ArrayList<>();
+
+        ArrayList<ArrayBlockingQueue<Status>> blocking_queues = new ArrayList<>();
+
+        for(String topic: appConfig.getTopics()){
+            ArrayBlockingQueue<Status> queue = new ArrayBlockingQueue<>(appConfig.getQueuCapacity());
+            blocking_queues.add(queue);
+            avroProducerThreads.add(new TweetsAvroProducerThread(appConfig, queue, latch, topic ));
+        }
+
+        tweetsThread = new TweetStreamsThread(appConfig, blocking_queues, latch);
+
+//        tweetsProducer = new TweetsAvroProducerThread(appConfig,statusQueue,latch);
     }
 
     public void start() {
@@ -45,7 +59,9 @@ public class TwitterKafkaProducerMain {
 
         log.info("Application started!");
         executor.submit(tweetsThread);
-        executor.submit(tweetsProducer);
+        for(TweetsAvroProducerThread thread: avroProducerThreads){
+            executor.submit(thread);
+        }
         log.info("Stuff submit");
         try {
             log.info("Latch await");

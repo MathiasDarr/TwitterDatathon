@@ -6,6 +6,8 @@ import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CountDownLatch;
 
@@ -26,25 +28,35 @@ public class TweetStreamsThread implements Runnable{
 
 
     private final AppConfig appConfig;
-    private  final ArrayBlockingQueue<Status> statusQueue;
+    ArrayList<ArrayBlockingQueue<Status>> statusQueues;
     private final CountDownLatch latch;
     private final  StatusListener listener;
     private final ConfigurationBuilder cb;
     private final TwitterStream twitterStream;
-    public TweetStreamsThread(AppConfig appConfig, ArrayBlockingQueue<Status> statusQueue, CountDownLatch latch){
+    private final String[] topics;
+    public TweetStreamsThread(AppConfig appConfig, ArrayList<ArrayBlockingQueue<Status>> queues, CountDownLatch latch){
 
         this.listener = getStatusListener();
         this.cb = getConfigurationBuilder();
         this.appConfig = appConfig;
-        this.statusQueue = statusQueue;
+        this.statusQueues = queues;
         this.latch = latch;
 
         TwitterStreamFactory tf = new TwitterStreamFactory(cb.build());
         twitterStream = tf.getInstance();
         twitterStream.addListener(listener);
-
         FilterQuery filtre = new FilterQuery();
-        String[] keywordsArray = {appConfig.getTweetKeyword()}; //filter based on your choice of keywords
+
+
+
+
+        String[] keywordsArray = new String[appConfig.getTopics().size()];
+        for(int i =0;i<appConfig.getTopics().size();i++){
+            keywordsArray[i] = appConfig.getTopics().get(i);
+        }
+        this.topics = keywordsArray;
+
+//        String[] keywordsArray = {"virus", "trump"}; //filter based on your choice of keywords
         filtre.track(keywordsArray);
 
         twitterStream.filter(filtre);
@@ -56,8 +68,11 @@ public class TweetStreamsThread implements Runnable{
 
             @Override
             public void onStatus(Status status) {
-                statusQueue.add(status);
-
+                for(int i=0; i < topics.length; i++){
+                    if(status.getText().contains(topics[i])){
+                        statusQueues.get(i).add(status);
+                    }
+                }
                 //System.out.println(status.getUser().getName() + " " + status.getUser().getFollowersCount());
                 status.getUser();
             }
