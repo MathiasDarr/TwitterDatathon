@@ -41,6 +41,6 @@ class LanguageIdentificationTransformer(Transformer, HasInputCol, HasOutputCol, 
     def _transform(self, dataset):
         def f(s):
             return 'a'
-        return dataset.withColumn('identified_language', detect_language_udf('content'))
+        return dataset.withColumn(self.getOutputCol(), detect_language_udf(self.getInputCol()))
 
 

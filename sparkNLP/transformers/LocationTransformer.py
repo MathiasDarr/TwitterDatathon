@@ -1,19 +1,122 @@
+import findspark
+findspark.init()
 from pyspark.sql.functions import udf
 from pyspark.sql.types import ArrayType, StringType
 from pyspark.ml.pipeline import Transformer
 from pyspark.ml.param.shared import HasInputCol, HasOutputCol, Param, Params, TypeConverters
 from pyspark.ml.util import DefaultParamsReadable, DefaultParamsWritable
 from pyspark import keyword_only
+import pandas as pd
 
-from sparkNLP.utils.identify_language import detect_language
 
-detect_language_udf = udf(lambda content: detect_language(content), StringType())
+class LocationParser:
+    '''
+    This class's parse_location method is made use of the by the UDF & Transformer to feature engineer a categorical
+    location feature.
 
-class LanguageIdentificationTransformer(Transformer, HasInputCol, HasOutputCol, DefaultParamsReadable, DefaultParamsWritable):
+    '''
+    def __init__(self):
+        cities_df = pd.read_csv('data/us_cities.csv')
+        cities_df.columns = [c.lower() for c in cities_df.columns]
+        cities_df = cities_df.loc[cities_df.population > 50000]
+        self.cities_df = cities_df[['city', 'state_name', 'lat','lng','population','density']]
+        self.states_df = pd.read_csv('data/states.csv')
+
+    def parse_location(self, location):
+        state = self.parse_state(location)
+        found_cities = self.parse_city(location)
+        print("{} {}".format(state, found_cities))
+        if state and found_cities:
+            ###
+            for city, s in found_cities:
+                if s == state:
+                    return state, city
+        elif state and not found_cities:
+            return state, self.default_location_in_state(state)
+
+        elif not state and found_cities:
+            if len(found_cities) ==1:
+                pass
+            else:
+                ### There are cities such as Springfield that are in multiple states,
+                return self.default_state_in_cities(found_cities), found_cities[1]
+        else:
+            return None, None
+
+    def default_location_in_state(self, state):
+        '''
+        This method will assign a state a default city in the absence of a city
+
+        :param state:
+        :return:
+        '''
+        return 'Washington', 'Seattle'
+
+    def default_state_in_cities(self, cities):
+        '''
+        This
+
+        :param cities:
+        :return:
+        '''
+
+        return 'Washington'
+
+
+    def location_aliases(self):
+        pass
+
+
+    def parse_state(self, location):
+        location = location.lower()
+        location_split = location.lower().split(' ')
+        for state_abrev, lat, lng, state_name in self.states_df.itertuples(index=False):
+            lstate_abreviation = state_abrev.lower()
+            lstate_name = state_name.lower()
+            for location_word in location_split:
+                if location_word == lstate_abreviation or location_word == lstate_name:
+                    return state_name
+
+    def parse_city(self, location):
+        location = location.lower()
+        location_split = location.lower().split(' ')
+        found_cities = []
+        for city, state, lat, lng, population, density in self.cities_df.itertuples(index=False):
+            lcity = city.lower()
+
+            for location_word in location_split:
+                if location_word == lcity:
+                    found_cities.append((city, state))
+        return found_cities
+
+
+locationParser = LocationParser()
+
+
+@udf(returnType=StringType())
+def location_parser_udf(location):
+    '''
+    This UDF is used by the transformer to feature engineer a categorical variable.
+
+    :param location:
+    :return:
+    '''
+
+    try:
+        state, city = locationParser.parse_location(location)
+        return state
+    except:
+        return None
+
+
+class LocationParserTransformer(Transformer, HasInputCol, HasOutputCol, DefaultParamsReadable, DefaultParamsWritable):
+    '''
+    This transformer is used in the spark.ml pipeline to perform a transformation.
+    '''
 
     @keyword_only
     def __init__(self, inputCol=None, outputCol=None, stopwords=None):
-        super(LanguageIdentificationTransformer, self).__init__()
+        super(LocationParserTransformer, self).__init__()
         self.stopwords = Param(self, "stopwords", "")
         self._setDefault(stopwords=[])
         kwargs = self._input_kwargs
@@ -41,6 +144,6 @@ class LanguageIdentificationTransformer(Transformer, HasInputCol, HasOutputCol, 
     def _transform(self, dataset):
         def f(s):
             return 'a'
-        return dataset.withColumn('identified_language', detect_language_udf('content'))
 
-
+        location_parser_udf('location')
+        return dataset.withColumn(self.getOutputCol(), location_parser_udf(self.getInputCol()))
