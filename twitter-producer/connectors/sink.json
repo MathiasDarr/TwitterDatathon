@@ -1,0 +1,12 @@
+{
+  "name": "simple-elasticsearch-connector3",
+  "config": {
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "connection.url": "http://elasticsearch:9200",
+    "tasks.max": "1",
+    "topics": "simple.elasticsearch.data",
+    "key.ignore": "true",
+    "type.name": "_doc"
+  }
+}
+

@@ -17,14 +17,14 @@ public class AppConfig {
 
 
     private final String elastic_search_host;
-    private final String elastic_search_port;
+    private final int elastic_search_port;
     public AppConfig(Config config, String[] arguments) {
 
         this.bootstrapServers = arguments[0];
         this.schemaRegistryUrl = arguments[1];
 
         this.elastic_search_host = arguments[2];
-        this.elastic_search_port = arguments[3];
+        this.elastic_search_port = Integer.parseInt(arguments[3]);
 
         topics = new ArrayList<>();
         for(int i =4; i< arguments.length; i++){
@@ -52,7 +52,7 @@ public class AppConfig {
         return elastic_search_host;
     }
 
-    public String getElastic_search_port() {
+    public int getElastic_search_port() {
         return elastic_search_port;
     }
 }

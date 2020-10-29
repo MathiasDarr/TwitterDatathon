@@ -12,6 +12,7 @@ import org.apache.kafka.common.serialization.LongSerializer;
 import org.joda.time.DateTime;
 
 
+import org.mddarr.tweets.producer.ElasticSearchProducer;
 import twitter4j.Status;
 
 import java.util.ArrayList;
@@ -31,18 +32,18 @@ public class TweetsAvroProducerThread implements Runnable {
     private final String targetTopic;
     private final KafkaProducer<Long, Tweet> kafkaProducer;
     private final CountDownLatch latch;
-
+    private final ElasticSearchProducer elasticSearchProducer;
     private int recordCount;
 
     private final ArrayBlockingQueue<Status> statusQueue;
 
-    public TweetsAvroProducerThread(AppConfig appConfig, ArrayBlockingQueue<Status> statusQueue, CountDownLatch latch, String topic){
-
+    public TweetsAvroProducerThread(AppConfig appConfig, ArrayBlockingQueue<Status> statusQueue, CountDownLatch latch, String topic, ElasticSearchProducer elasticSearchProducer){
+        this.elasticSearchProducer = elasticSearchProducer;
         this.statusQueue = statusQueue;
         this.appConfig = appConfig;
         this.latch = latch;
         this.kafkaProducer = createKafkaProducer(appConfig);
-        this.targetTopic = "kafka."+topic;
+        this.targetTopic = topic;
         this.recordCount +=1;
 
     }
@@ -72,7 +73,8 @@ public class TweetsAvroProducerThread implements Runnable {
                     Status status = statusQueue.poll();
                     tweetCount +=1;
                     Tweet tweet = statusToTweet(status, tweetCount);
-                    kafkaProducer.send(new ProducerRecord<>(targetTopic, tweet));
+//                    kafkaProducer.send(new ProducerRecord<>(targetTopic, tweet));
+                    elasticSearchProducer.postTweet(tweet, targetTopic);
                 }else{
                     Thread.sleep(200);
                 }

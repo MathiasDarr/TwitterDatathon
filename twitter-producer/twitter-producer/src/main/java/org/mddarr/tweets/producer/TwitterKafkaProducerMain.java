@@ -21,6 +21,7 @@ public class TwitterKafkaProducerMain {
     private ArrayList<TweetsAvroProducerThread> avroProducerThreads;
 //    private TweetsAvroProducerThread tweetsProducer;
     private TweetStreamsThread tweetsThread;
+    private final ElasticSearchProducer elasticSearchProducer;
     public static void main(String[] args) {
         TwitterKafkaProducerMain app = new TwitterKafkaProducerMain(args);
         app.start();
@@ -37,10 +38,12 @@ public class TwitterKafkaProducerMain {
 
         ArrayList<ArrayBlockingQueue<Status>> blocking_queues = new ArrayList<>();
 
+        elasticSearchProducer = new ElasticSearchProducer(appConfig.getElastic_search_host(), appConfig.getElastic_search_port());
+
         for(String topic: appConfig.getTopics()){
             ArrayBlockingQueue<Status> queue = new ArrayBlockingQueue<>(appConfig.getQueuCapacity());
             blocking_queues.add(queue);
-            avroProducerThreads.add(new TweetsAvroProducerThread(appConfig, queue, latch, topic ));
+            avroProducerThreads.add(new TweetsAvroProducerThread(appConfig, queue, latch, topic, elasticSearchProducer ));
         }
 
         tweetsThread = new TweetStreamsThread(appConfig, blocking_queues, latch);

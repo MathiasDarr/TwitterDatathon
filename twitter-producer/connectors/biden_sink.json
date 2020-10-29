@@ -1,0 +1,11 @@
+{
+  "name": "biden-indexq",
+  "config": {
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "topics": "kafka.biden",
+    "connection.url": "http://localhost:9200",
+    "type.name": "_doc",
+    "key.ignore": "true",
+    "schema.ignore": "false"
+  }
+}

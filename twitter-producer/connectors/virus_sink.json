@@ -1,0 +1,11 @@
+{
+  "name": "virus-index",
+  "config": {
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "topics": "virus",
+    "connection.url": "http://localhost:9200",
+    "type.name": "_doc",
+    "key.ignore": "true",
+    "schema.ignore": "false"
+  }
+}

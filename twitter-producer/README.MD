@@ -34,3 +34,9 @@ curl localhost:29200/kafka-tweets/_search | jq
 #### If you do not have confluent kafka on your machine use the brokers console-consumer (does not support avro as far as I can tell)
 docker exec kafka bash bin/kafka-console-consumer.sh --topic kafka-tweets --from-beginning --property print.key=true --bootstrap-server kafka:9092
 
+
+
+
+curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://localhost:8083/connectors/ -d @connectors/virus_sink.json
+
+curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://localhost:8083/connectors/ -d @connectors/virus_sink.json
