@@ -16,6 +16,9 @@ dist/
 # Log files
 *.log
 
+.idea
+
+
 # Package files
 *.jar
 
@@ -24,7 +27,10 @@ target/
 dist/
 
 # JetBrains IDE
-.idea/
+.*idea/
+
+
+tmp/
 
 # Unit test reports
 TEST*.xml

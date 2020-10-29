@@ -21,10 +21,10 @@ a key or multiple.  For now just hard code somethign..
 public class TweetStreamsThread implements Runnable{
 
     private final Log log = LogFactory.getLog(getClass());
-    static final String CONSUMER_KEY = "sRSys6TAa2RpiMqrl6foK5b1M";
-    static final String CONSUMER_SECRET = "zjtDAsLmJCCBUrBD2mo5Gu5Jol47eroD5TI1GLdaqg9xyRC8AM";
-    static final String ACCESS_TOKEN = "330787843-HXik5hFVIqGdelSm0nn92F4pvyviMLwSNibQKETs";
-    static final String ACCESS_TOKEN_SECRET = "Jqoia2vWdI6H1CXr48PNscrHgmmm2IrDJAd9BgtJQtBBl";
+//    static final String CONSUMER_KEY = "sRSys6TAa2RpiMqrl6foK5b1M";
+//    static final String CONSUMER_SECRET = "zjtDAsLmJCCBUrBD2mo5Gu5Jol47eroD5TI1GLdaqg9xyRC8AM";
+//    static final String ACCESS_TOKEN = "330787843-HXik5hFVIqGdelSm0nn92F4pvyviMLwSNibQKETs";
+//    static final String ACCESS_TOKEN_SECRET = "Jqoia2vWdI6H1CXr48PNscrHgmmm2IrDJAd9BgtJQtBBl";
 
 
     private final AppConfig appConfig;
@@ -46,9 +46,6 @@ public class TweetStreamsThread implements Runnable{
         twitterStream = tf.getInstance();
         twitterStream.addListener(listener);
         FilterQuery filtre = new FilterQuery();
-
-
-
 
         String[] keywordsArray = new String[appConfig.getTopics().size()];
         for(int i =0;i<appConfig.getTopics().size();i++){
@@ -93,10 +90,10 @@ public class TweetStreamsThread implements Runnable{
     private ConfigurationBuilder getConfigurationBuilder(){
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
-                .setOAuthConsumerKey(CONSUMER_KEY)
-                .setOAuthConsumerSecret(CONSUMER_SECRET)
-                .setOAuthAccessToken(ACCESS_TOKEN)
-                .setOAuthAccessTokenSecret(ACCESS_TOKEN_SECRET);
+                .setOAuthConsumerKey(AppConfig.getConsumerKey())
+                .setOAuthConsumerSecret(AppConfig.getConsumerSecret())
+                .setOAuthAccessToken(AppConfig.getAccessToken())
+                .setOAuthAccessTokenSecret(AppConfig.getAccessTokenSecret());
         return cb;
     }
 

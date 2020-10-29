@@ -32,13 +32,11 @@ public class TwitterKafkaProducerMain {
         int number_of_topics = appConfig.getTopics().size();
         latch = new CountDownLatch(number_of_topics+1);
         executor = Executors.newFixedThreadPool(number_of_topics+1);
-        ArrayBlockingQueue<Status> statusQueue = new ArrayBlockingQueue<Status>(appConfig.getQueuCapacity());
 
         avroProducerThreads = new ArrayList<>();
-
         ArrayList<ArrayBlockingQueue<Status>> blocking_queues = new ArrayList<>();
 
-        elasticSearchProducer = new ElasticSearchProducer(appConfig.getElastic_search_host(), appConfig.getElastic_search_port());
+        elasticSearchProducer = new ElasticSearchProducer(appConfig);
 
         for(String topic: appConfig.getTopics()){
             ArrayBlockingQueue<Status> queue = new ArrayBlockingQueue<>(appConfig.getQueuCapacity());
@@ -48,7 +46,6 @@ public class TwitterKafkaProducerMain {
 
         tweetsThread = new TweetStreamsThread(appConfig, blocking_queues, latch);
 
-//        tweetsProducer = new TweetsAvroProducerThread(appConfig,statusQueue,latch);
     }
 
     public void start() {

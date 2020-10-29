@@ -73,8 +73,9 @@ public class TweetsAvroProducerThread implements Runnable {
                     Status status = statusQueue.poll();
                     tweetCount +=1;
                     Tweet tweet = statusToTweet(status, tweetCount);
-//                    kafkaProducer.send(new ProducerRecord<>(targetTopic, tweet));
                     elasticSearchProducer.postTweet(tweet, targetTopic);
+                    kafkaProducer.send(new ProducerRecord<>(targetTopic, tweet));
+
                 }else{
                     Thread.sleep(200);
                 }

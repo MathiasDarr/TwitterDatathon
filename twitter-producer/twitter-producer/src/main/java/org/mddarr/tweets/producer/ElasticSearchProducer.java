@@ -15,9 +15,9 @@ public class ElasticSearchProducer {
     private final int port;
     private final String scheme;
     private final RestHighLevelClient client;
-    public ElasticSearchProducer(String host, int port){
-        this.host = host;
-        this.port = port;
+    public ElasticSearchProducer(AppConfig appConfig){
+        host = appConfig.getElastic_search_host();
+        port = appConfig.getElastic_search_port();
         if(this.host.equals("localhost")){
             scheme="http";
         }else{
