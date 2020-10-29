@@ -42,7 +42,7 @@ public class TweetsAvroProducerThread implements Runnable {
         this.appConfig = appConfig;
         this.latch = latch;
         this.kafkaProducer = createKafkaProducer(appConfig);
-        this.targetTopic = topic;
+        this.targetTopic = "kafka."+topic;
         this.recordCount +=1;
 
     }
