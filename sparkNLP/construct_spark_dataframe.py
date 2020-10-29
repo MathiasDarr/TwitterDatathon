@@ -1,22 +1,6 @@
-import findspark
-findspark.init()
-import pyspark as ps
 import os
 import boto3
-
-
-def getSparkInstance():
-    java8_location= '/usr/lib/jvm/java-8-openjdk-amd64' # Set your own
-    os.environ['JAVA_HOME'] = java8_location
-    spark = ps.sql.SparkSession.builder \
-        .master("local[4]") \
-        .appName("individual") \
-        .getOrCreate()
-    return spark
-
-if not os.path.exists('tmp/silly/how'):
-    os.makedirs('tmp/silly/how')
-
+from sparkNLP.sparkSession import getSparkInstance
 
 def download_parquet_files(index, days):
     '''
@@ -44,14 +28,17 @@ download_parquet_files('trump',[1028])
 
 
 
-def create_tweets_dataframe():
+def create_tweets_dataframe(index):
     spark = getSparkInstance()
-
     parquet_files = []
-    for folder in os.listdir('tmp'):
-        for file in os.listdir('tmp/'+folder):
-            parquet_files.append('tmp/{}/{}'.format(folder,file))
+    directory = 'tmp/{}'.format(index)
+    for folder in os.listdir(directory):
+        for file in os.listdir('{}/{}/'.format('tmp/{}'.format(index),folder)):
+            parquet_files.append('tmp/{}/{}/{}'.format(index, folder, file))
+            print(file)
 
+    # for file in os.listdir('tmp/'+folder):
+    #         parquet_files.append('tmp/{}/{}'.format(folder,file))
     dataframes = []
     for file in parquet_files:
         df = spark.read.parquet(file)
