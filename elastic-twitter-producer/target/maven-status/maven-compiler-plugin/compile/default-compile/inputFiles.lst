@@ -1,9 +1,0 @@
-/data/mddarr/bucketRepositories/twitter/elastic-twitter-producer/src/main/java/org/mddarr/dakobed/twitter/runnable/TweetStreamsThread.java
-/data/mddarr/bucketRepositories/twitter/elastic-twitter-producer/src/main/java/org/mddarr/dakobed/twitter/TwitterProducerMain.java
-/data/mddarr/bucketRepositories/twitter/elastic-twitter-producer/src/main/java/org/mddarr/dakobed/twitter/locationparser/US.java
-/data/mddarr/bucketRepositories/twitter/elastic-twitter-producer/src/main/java/org/mddarr/dakobed/twitter/model/Tweet.java
-/data/mddarr/bucketRepositories/twitter/elastic-twitter-producer/src/main/java/org/mddarr/dakobed/twitter/locationparser/LocationParser.java
-/data/mddarr/bucketRepositories/twitter/elastic-twitter-producer/src/main/java/org/mddarr/dakobed/twitter/runnable/TweetsElasticSearchThread.java
-/data/mddarr/bucketRepositories/twitter/elastic-twitter-producer/src/main/java/org/mddarr/dakobed/twitter/locationparser/ParserTest.java
-/data/mddarr/bucketRepositories/twitter/elastic-twitter-producer/src/main/java/org/mddarr/dakobed/twitter/locationparser/City.java
-/data/mddarr/bucketRepositories/twitter/elastic-twitter-producer/src/main/java/org/mddarr/dakobed/twitter/locationparser/State.java

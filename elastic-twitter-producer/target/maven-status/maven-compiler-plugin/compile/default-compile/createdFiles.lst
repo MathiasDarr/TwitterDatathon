@@ -1,9 +1,0 @@
-org/mddarr/dakobed/twitter/runnable/TweetsElasticSearchThread.class
-org/mddarr/dakobed/twitter/model/Tweet.class
-org/mddarr/dakobed/twitter/locationparser/US.class
-org/mddarr/dakobed/twitter/runnable/TweetStreamsThread$1.class
-org/mddarr/dakobed/twitter/runnable/TweetStreamsThread.class
-org/mddarr/dakobed/twitter/TwitterProducerMain.class
-org/mddarr/dakobed/twitter/locationparser/State.class
-org/mddarr/dakobed/twitter/locationparser/City.class
-org/mddarr/dakobed/twitter/locationparser/LocationParser.class
