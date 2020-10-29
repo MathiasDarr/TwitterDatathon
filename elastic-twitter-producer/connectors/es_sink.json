@@ -1,0 +1,11 @@
+{
+  "name": "tweets-es-sink5",
+  "config": {
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "topics": "kafka-tweets",
+    "connection.url": "http://localhost:9200",
+    "type.name": "_doc",
+    "key.ignore": "true",
+    "schema.ignore": "false"
+  }
+}
