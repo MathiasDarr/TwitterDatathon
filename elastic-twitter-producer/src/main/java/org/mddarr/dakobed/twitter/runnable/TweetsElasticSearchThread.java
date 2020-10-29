@@ -35,7 +35,7 @@ import java.util.concurrent.CountDownLatch;
 public class TweetsElasticSearchThread implements Runnable{
     private final Log log = LogFactory.getLog(getClass());
     private final CountDownLatch latch;
-    private final String port;
+    private final int port;
     private final String host;
     private final String filter;
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
@@ -76,7 +76,7 @@ public class TweetsElasticSearchThread implements Runnable{
 //        RestClient client = RestClient.builder(
 //                new HttpHost("localhost", 29200, "http")).build();
 //        int port = 29200;
-        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost(host, Integer.parseInt(port), "http")));
+        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost(host, port, "http")));
 
 //        RestHighLevelClient client = new RestHighLevelClient(builder);
 

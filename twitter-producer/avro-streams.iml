@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/order-process/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/payments-service/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/payments-service/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/payments/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/validation-service/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/payment-service/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/customer-service/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/user-service/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/users/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/inventory-service/src/main" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/authentication/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/product-service/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/tweets-service/src/main/java" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/angulartweets" />
+      <excludeFolder url="file://$MODULE_DIR$/dashboard" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend" />
+      <excludeFolder url="file://$MODULE_DIR$/frontends" />
+      <excludeFolder url="file://$MODULE_DIR$/inventory-service/target" />
+      <excludeFolder url="file://$MODULE_DIR$/shoe-store" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: org.junit.jupiter:junit-jupiter-engine:5.5.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apiguardian:apiguardian-api:1.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.junit.platform:junit-platform-engine:1.3.2" level="project" />
+    <orderEntry type="library" name="Maven: org.junit.platform:junit-platform-commons:1.3.2" level="project" />
+    <orderEntry type="library" name="Maven: org.opentest4j:opentest4j:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.junit.jupiter:junit-jupiter-api:5.3.2" level="project" />
+  </component>
+</module>

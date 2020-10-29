@@ -29,7 +29,7 @@ public class TwitterProducerMain {
     private TwitterProducerMain(String[] arguments){
         AppConfig appConfig = new AppConfig(ConfigFactory.load(), arguments);
 
-        String filter_argument = arguments[0];
+        String filter_argument = appConfig.getTopics().get(0);
         String hostname = appConfig.getHost();
         int port = appConfig.getPort();
         latch = new CountDownLatch(2);

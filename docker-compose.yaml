@@ -1,9 +1,17 @@
 version: '2'
 services:
-#  tweets:
-#    build:
-#     dakobed-twitter-producer/
-
+  elasticsearch7:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
+    container_name: elasticsearch7
+    ports:
+      - 29200:9200
+    environment:
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+      discovery.type: "single-node"
+  tweets:
+    build:
+     dakobed-twitter-producer/
   zookeeper:
     image: debezium/zookeeper:${DEBEZIUM_VERSION}
     ports:
@@ -11,7 +19,6 @@ services:
       - 2888:2888
       - 3888:3888
     container_name: zookeeper
-
   kafka:
     image: debezium/kafka:${DEBEZIUM_VERSION}
     ports:
@@ -21,8 +28,6 @@ services:
     environment:
       - ZOOKEEPER_CONNECT=zookeeper:2181
     container_name: kafka
-
-
   schema-registry:
     image: confluentinc/cp-schema-registry
     ports:
@@ -35,18 +40,6 @@ services:
     container_name: schema-registry
     links:
       - zookeeper
-
-
-  elasticsearch7:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
-    container_name: elasticsearch7
-    ports:
-      - 29200:9200
-    environment:
-      xpack.security.enabled: "false"
-      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
-      discovery.type: "single-node"
-
 
   connect:
     image: confluentinc/cp-kafka-connect:5.4.0-beta1

@@ -1,0 +1,20 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/locationsDB
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  data:
+    elasticsearch:
+      client:
+        reactive:
+          endpoints: localhost:29200

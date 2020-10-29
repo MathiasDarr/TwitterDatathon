@@ -1,0 +1,13 @@
+[{"namespace": "org.mddarr.avro.tweets",
+  "type": "record",
+  "name": "Tweet",
+  "fields": [
+    {"name": "name",  "type": "string"},
+    {"name": "screename",  "type": "string", "doc": "first name"},
+    {"name": "location", "default": "none", "type": "string"},
+    {"name": "id", "type": "long", "doc": "Tweet ID" },
+    {"name": "tweet_content", "type": ["null", "string"], "default": null, "doc": "Tweet" },
+    {"name": "tweet_time",  "type": { "type" : "long", "logicalType" : "timestamp-millis" } }
+  ]
+}
+]

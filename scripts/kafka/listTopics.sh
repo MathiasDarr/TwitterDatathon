@@ -1,2 +1,4 @@
 #! /bin/bash
-/home/mddarr/libraries/confluent-5.2.1/bin/kafka-topics --list --bootstrap-server localhost:9092
+docker exec -t kafka bin/kafka-topics.sh \
+    --bootstrap-server kafka:9092 \
+    --list
