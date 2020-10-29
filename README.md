@@ -17,7 +17,6 @@
     - The kafka connect elasticsearch sink isn't working properly, this would be preferable than pushing to ES directly from the twitter-producer java application (there
     are parsing errors at the moment due to unescaped protected characters resulting in not all of the data reaching elastic search.) 
 
-
 * Feature Engineering
     - Language identification making use of the stop words provided by nltk to identify the language of the tweet based upon ratios of stop words present
     in the tweet content
@@ -40,7 +39,7 @@
     - Airflow DAG for generating a model every hour or every day.  
 
 * Tweets Query API 
-    - API developed using Spring Boot (and/or Flask) for querying the elasticsearch tweete data based upon query parmaeterrs such as
+    - API developed using Spring Boot (and/or Flask) for querying the elasticsearch tweet data based upon query parmaeterrs such as
         location, filter keywords)
 #####  TODO: #####
     - Decouple the API from the pipeline.  Shoulden't take too long
