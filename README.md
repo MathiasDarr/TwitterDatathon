@@ -133,6 +133,8 @@
 This project makes use of disparate data sources.  A demonstration of how to join the datasets into a single dataframe can be found in the join_dataframe.py file
 
 
+### Plot the sentiment analysis ### 
+* python3 plot_sentiment_analysis.py  (be patient this might take a secon)
 
 
 ### Spark relies on Java 8 so if you have Java 11 set as your current java version you can switch between them as follows  ### 
