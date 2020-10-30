@@ -1,3 +1,7 @@
+"""
+This file contains utilities for working with spark dataframes & parquet files.
+"""
+
 import os
 import boto3
 from sparkNLP.utils.sparkSession import getSparkInstance

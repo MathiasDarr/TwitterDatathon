@@ -28,7 +28,7 @@ def save_transformed_data_to_parquet():
     sentimentTransformer = SentimentTransformer(inputCol='content')
 
 
-    pipeline = Pipeline(stages=[dateParserTransformer, languageTransformer, locationTransformer]) #, sentimentTransformer])
+    pipeline = Pipeline(stages=[dateParserTransformer, languageTransformer, locationTransformer,sentimentTransformer])
 
     dataframe = create_dataframe_from_parquet('data/parquet')
     dataframe = dataframe.limit(10000)

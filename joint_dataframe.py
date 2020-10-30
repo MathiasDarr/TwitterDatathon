@@ -1,5 +1,7 @@
 """
-This file demonstrates how to join the dataset derived from the raw data & the data received from the twitter API
+This file demonstrates how to join the dataset derived from the raw data & the data received from the twitter API.
+
+Also
 
 
 """
@@ -14,6 +16,9 @@ from sparkNLP.transformers.SentimentAnalysisTransformer import SentimentTransfor
 from pyspark.ml import Pipeline
 from sparkNLP.utils.construct_spark_dataframe import create_dataframe_from_parquet, download_parquet_files, \
     create_tweets_dataframe, concatenate_dataframes
+
+from sparkNLP.generate_sentiment_aggregation import generate_average_sentiment_dictionary
+
 
 
 
@@ -42,3 +47,5 @@ biden_tweets_dataframe = biden_tweets_dataframe.filter(biden_tweets_dataframe['p
 
 
 dataframe = create_dataframe_from_parquet('data/transformed_data')
+
+aggregate_sentiment_dataframe = generate_average_sentiment_dictionary(dataframe)

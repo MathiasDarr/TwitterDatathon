@@ -57,7 +57,8 @@ def scan_tweets_index(index):
 def deleteElasticSearchTweets():
     host = "localhost:29200"
     es = Elasticsearch(host)
-    es.delete_by_query(index="tweets", body={"query": {"match_all": {}}})
+    es.delete_by_query(index="biden", body={"query": {"match_all": {}}})
+    es.delete_by_query(index="trump", body={"query": {"match_all": {}}})
 
 
 def generate_directory_name_infer_time(index):
@@ -139,4 +140,7 @@ delete_tmp_directory = BashOperator(
     bash_command='rm -rf tmp/',
 )
 
-scan_tweets_task >> delete_tweets_task >> delete_tmp_directory
+scan_tweets_task
+
+
+# delete_tweets_task >> delete_tmp_directory

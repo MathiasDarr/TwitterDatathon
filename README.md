@@ -91,7 +91,7 @@
     - create an S3 bucket & edit the BUCKET variable at the top of dags/tweets_dag.py to the bucket just created
     - copy the airflow dag into the default airflow DAGs folder
         cp dags/tweets_dag.py $HOME/airflow/dags/tweets_dag.py (Copy the DAG file into the airflow DAGs folder)
-    - the pipeline can be run from the airflow web client, however I am certain there is a method of doing this from the CLI.
+    - the dag be triggered  from the airflow web client, however I am certain there is a method of doing this from the CLI.
     
 * TODO
     - modify the script to allow a caller to pass a sentence or tweet lengthed input text to the script instead of the hardcoded text 

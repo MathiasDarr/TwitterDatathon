@@ -61,7 +61,7 @@ class SentimentAnalyzer:
             sentiments = self.sid.polarity_scores(' '.join(v))
             print(sentiments)
             sentiment_dictionary[k] = sentiments['compound']
-        return list(str(v) for v in sentiment_dictionary.values())
+        return list(v for v in sentiment_dictionary.values())
 
 
 class SentimentTransformer(Transformer, HasInputCol, HasOutputCol, DefaultParamsReadable, DefaultParamsWritable):
@@ -104,7 +104,7 @@ class SentimentTransformer(Transformer, HasInputCol, HasOutputCol, DefaultParams
         return self._set(outputCol=value)
 
     def _transform(self, dataset):
-        sentiment_analysis_udf = udf(lambda content: self.sentimentAnalyzer.generate_sentimenet_scores(content), ArrayType(StringType()))
+        sentiment_analysis_udf = udf(lambda content: self.sentimentAnalyzer.generate_sentimenet_scores(content), ArrayType(DoubleType()))
         sentiments = sentiment_analysis_udf(self.getInputCol())
 
         for i, subject in enumerate(self.sentimentAnalyzer.subjects):
