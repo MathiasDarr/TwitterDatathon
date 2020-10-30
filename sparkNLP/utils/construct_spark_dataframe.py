@@ -54,7 +54,21 @@ def create_tweets_dataframe(index):
     for file in parquet_files:
         df = spark.read.parquet(file)
         dataframes.append(df)
+    df = dataframes[0]
+    for dataf in dataframes[1:]:
+        df = df.union(dataf)
+    return df
 
+
+    # return concatenate_dataframes(dataframes)
+
+
+def concatenate_dataframes(dataframes):
+    """
+    This function will construct a concatenated dataframe from a list of dataframes
+    :param dataframes: list of dataframes
+    :return:
+    """
     df = dataframes[0]
     for dataf in dataframes[1:]:
         df = df.union(dataf)

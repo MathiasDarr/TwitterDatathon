@@ -9,7 +9,7 @@
         - Use the twitter4j library to stream tweets (requires twitter API keys)
             - http://twitter4j.org/en/
         - pushes data into 
-            - individual kafka topics for each keyword provided at run time
+            - individual kafka topics for each keyword provided at run time (uses avro serialization)
             - individual elasticsearch indices for each each keyword provided at run time
     
     - Airflow DAG
@@ -39,39 +39,58 @@
         - Apply a spark streaming model which uses kafka as an input data source
         - The Spark job should run on EMR
         - Airflow DAG for generating a model every hour or every day.  
+* Sentiment Ananlys data visualization
+    - Map of united states with states colored according to the average sentiment for each candidate
 
 
-### How do I get set up? ###
-This project has the following dependencies
-* docker & docker-compose
-* maven (If you want to compile the java code)
-* airflow
-    - pip install apache-airflow
-* spark 2.4
-* nltk
-    
+
 ### Running the twitter streaming pipeline  ### 
 * The data pipeline has the following dependencies
-    - docker & docker-compose
+    - docker
+        - https://docs.docker.com/get-docker/
+    - docker-compose
+        - https://docs.docker.com/compose/install/
     - maven (If you want to compile the java code)
+        - https://maven.apache.org/install.html 
     - airflow
         - pip install apache-airflow
-    - spark 2.4
-    - nltk
+    - boto3
+        - pip install boto3
+        - ensure aws credentials are correct.
+        - Create a  
+    - twitter API key
+        - the twitter4j library requires a twitter API key
+        - Set these environment variables on your computer.  The java application make use of these when configuring the client.  
+            - export TWITTER_CONSUMER_KEY="your consumer key"
+            - export TWITTER_CONSUMER_SECRET="your consumer secret"
+            - export TWITTER_ACCESS_TOKEN="your access token"
+            - export TWITTER_ACCESS_TOKEN_SECRET="your access token secret"
 
 * Start zookeeper, schema registry,  kafka broker & elastic search
     - cd twitter-producer
     - docker-compose up --build
     
-* Run the java application
+* Run the java application 
     - mvn clean package (compile with maven)
-    - java -jar twitter-producer/target/twitter-producer-1.0-SNAPSHOT.jar http://localhost:9092 http://localhost:8081 localhost 29200 virus trump biden
+    - java -jar twitter-producer/target/twitter-producer-1.0-SNAPSHOT.jar http://localhost:9092 http://localhost:8081 localhost 29200 trump biden
+
+* View the tweets coming into kafka
+    - bash scripts/kafka/avro-consumer.sh trump
+    - bash scripts/kafka/avro-consumer.sh biden
+    
+* View the tweets in elasticsearch
+    - bash scripts/elasticsearch/queryES.sh trump
+    - bash scripts/elasticsearch/queryES.sh biden
     
 * Run the airflow DAG
     - airflow initdb (only required the first time )
-    - airflow webserver -p 8080
-    - airflow scheduler
-    - cp tweets_dag.py $HOME/airflow/dags/tweets_dag.py (Copy the DAG file into the airflow DAGs folder)
+    - run the airflow webserver 
+        - airflow webserver -p 8080
+    - run the airflow scheduler
+        airflow scheduler
+    - create an S3 bucket & edit the BUCKET variable at the top of dags/tweets_dag.py to the bucket just created
+    - copy the airflow dag into the default airflow DAGs folder
+        cp dags/tweets_dag.py $HOME/airflow/dags/tweets_dag.py (Copy the DAG file into the airflow DAGs folder)
     - the pipeline can be run from the airflow web client, however I am certain there is a method of doing this from the CLI.
     
 * TODO
@@ -85,6 +104,7 @@ This project has the following dependencies
     - Stanford CoreNLP
         - https://stanfordnlp.github.io/CoreNLP/download.html
     - nltk
+    - boto3
       
 * Run the CoreNLP server
     - unzip the download, cd to the stanford-corenlp-x.x.x directory 
@@ -108,7 +128,7 @@ This project has the following dependencies
     - python3 sentiment_analysis/nltk_sentimenet_analysis.py
 
 ### Combining the provided data & the data received from the API ###
-
+This project makes use of disparate data sources.  A demonstration of how to join the datasets into a single dataframe can be found in the join_dataframe.py file
 
 
 

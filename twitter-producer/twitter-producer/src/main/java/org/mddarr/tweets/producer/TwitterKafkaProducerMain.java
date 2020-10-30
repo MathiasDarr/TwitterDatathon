@@ -1,3 +1,7 @@
+/*
+This file defines the main class for the tweets data pipeline.  Command line arguments are provided when running the JAR that define the keywords on which to filter the tweets.  Each keyword will have a seperate threadsafe ArrayBlockingQueue which will be added to by the single instance of TweetStreamsThread.  Each keyword wiill have a separate TweetsAvroProducerThread, which pushes the data to individual kafka topics & writes to an individual elasticsearch indicies.
+ */
+
 package org.mddarr.tweets.producer;
 
 

@@ -1,3 +1,8 @@
+/*
+This file defines the TweetsAvroProducerThread class which implements the Runnable interface.  This class pushes tweets to a Kafka topic by reading data from a thread safe ArrayBlockingQueue
+
+
+ */
 package org.mddarr.tweets.producer.runnable;
 
 
@@ -85,8 +90,6 @@ public class TweetsAvroProducerThread implements Runnable {
         }
         close();
     }
-
-
 
     public void close(){
             log.info("Closing Producer");

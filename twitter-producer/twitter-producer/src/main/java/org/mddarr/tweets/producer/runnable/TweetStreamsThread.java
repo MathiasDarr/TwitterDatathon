@@ -1,3 +1,10 @@
+/*
+This file defines the TweetStreamsThread class which implements the Runnable interface.  This class uses the twitter4j library to stream tweets.  Depending on the keywords found in the tweet, tweets will be added to a threadsafe ArrayBlockingQueue.
+
+
+ */
+
+
 package org.mddarr.tweets.producer.runnable;
 
 import org.mddarr.tweets.producer.AppConfig;
@@ -21,11 +28,6 @@ a key or multiple.  For now just hard code somethign..
 public class TweetStreamsThread implements Runnable{
 
     private final Log log = LogFactory.getLog(getClass());
-//    static final String CONSUMER_KEY = "sRSys6TAa2RpiMqrl6foK5b1M";
-//    static final String CONSUMER_SECRET = "zjtDAsLmJCCBUrBD2mo5Gu5Jol47eroD5TI1GLdaqg9xyRC8AM";
-//    static final String ACCESS_TOKEN = "330787843-HXik5hFVIqGdelSm0nn92F4pvyviMLwSNibQKETs";
-//    static final String ACCESS_TOKEN_SECRET = "Jqoia2vWdI6H1CXr48PNscrHgmmm2IrDJAd9BgtJQtBBl";
-
 
     private final AppConfig appConfig;
     ArrayList<ArrayBlockingQueue<Status>> statusQueues;
@@ -52,8 +54,6 @@ public class TweetStreamsThread implements Runnable{
             keywordsArray[i] = appConfig.getTopics().get(i);
         }
         this.topics = keywordsArray;
-
-//        String[] keywordsArray = {"virus", "trump"}; //filter based on your choice of keywords
         filtre.track(keywordsArray);
 
         twitterStream.filter(filtre);
@@ -70,7 +70,6 @@ public class TweetStreamsThread implements Runnable{
                         statusQueues.get(i).add(status);
                     }
                 }
-                //System.out.println(status.getUser().getName() + " " + status.getUser().getFollowersCount());
                 status.getUser();
             }
             public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {}

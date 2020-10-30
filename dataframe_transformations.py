@@ -28,20 +28,19 @@ def save_transformed_data_to_parquet():
     sentimentTransformer = SentimentTransformer(inputCol='content')
 
 
-    pipeline = Pipeline(stages=[dateParserTransformer, languageTransformer, locationTransformer, sentimentTransformer])
+    pipeline = Pipeline(stages=[dateParserTransformer, languageTransformer, locationTransformer]) #, sentimentTransformer])
 
     dataframe = create_dataframe_from_parquet('data/parquet')
-
+    dataframe = dataframe.limit(10000)
+    # dataframe = dataframe.limit(100)
     pipeline_model = pipeline.fit(dataframe)
     dataframe = pipeline_model.transform(dataframe)
-
-    dataframe = dataframe.filter(dataframe['parsed_location'] != 'null')
-
+    print("THE NUMBER OF ROWS IN THE DATAFRAME IS {}".format(dataframe.count()))
     if not os.path.exists('data/transformed_data'):
         os.makedirs('data/transformed_data')
 
     dataframe.repartition(1).write.mode('overwrite').parquet('data/transformed_data')
-
+    return dataframe
 
 if __name__ == '__main__':
-    save_transformed_data_to_parquet()
+    dataframe = save_transformed_data_to_parquet()
