@@ -1,10 +1,69 @@
-# Twitter election 2020 datapipeline & analysis  #
+## Tweet October Surprises (Analysis of Twitter Data Pertaining to the 2020 Presidential Election)
 
-### This repository contains a data pipeline & analysis of twitter data pertaining to the 2020 presidential election ###
+This project is a part of the [Galvanize Alumni Relations](http://glavanize.com) at [Galvanize Datathon 2020 Blog](https://blog.galvanize.com/alumni-datathon-digging-into-the-election/).
 
-### This project consists of ###
-* [Exploratory Data Analysis](eda/README.md)
-    
+
+## Project Description
+The purpose of this project is use Twitter data from 3 days 30th September, 1st of October, and 2nd of October 2020 to provide three tiers of analysis.
+
+  >**First** is a general exploration of data based on Twitter feeds, user characteristics, time series analysis, and natural language processing.
+
+  >**Second** is analysis of Twitter feeds funneled into an overall influencer score based on retweets, following, favorited, and other metrics. This analysis will then rolled into classification model targeting user characteristics with the influencer score.
+
+  >**Third** is a live web dashboard centered around a map data of states with metrics based on sentiment analysis
+
+### Partners
+* Mathias Darr, Data Scientist and Data Engineer, web app ninja
+* Julia Sokolova, Data Scientist and Project Manager Queen Bee, sentiment analyst and modeler extraordinaire
+* David Yu, Data Scientist EDA Guru and bookworm for data
+
+### Methods Used
+* Inferential Statistics
+* Machine Learning
+* Data Visualization
+* Predictive Modeling
+* etc.
+
+### Technologies
+* Python
+* Pandas, jupyter
+* S3
+* EC2
+* PostGres, MySql
+* HTML
+* JavaScript
+* etc.
+  
+## Getting Started
+
+1. Clone this repo (for help see this [Readme](https://github.com/yuchild/galvanize_datathon2020/blob/main/README.md)).
+2. Raw Data is being kept offline due to size considerations. Do get started do the following:
+
+    Data Source: [GitHub Repo link provided @12PM Friday 10/29/2020]
+    Clone [GitHub Repo link provided @12PM Friday 10/29/2020]
+    Follow the instructions in the repository to install twarc and tqdm.
+    Apply for a twitter developer account.
+    Save api key, save api secret key, save bearer token.
+    Enter your twitter api information into twarc.
+    Use a mv command to move the contents of the desired days into a new single directory.
+    Look inside the cloned repository for the appropriate .txt files containing tweet ids. (ex. cat * >>
+    file name.txt)
+    Concatenate those files into one file.
+    In the terminal, use awk 'NR % 100 == 0' <file.txt> > <result.txt> to systematically sample every
+    100th tweet id. These are the tweets you will hydrate.
+    Modify the hydrate.py script in the cloned repository and run the script to rehydrate tweets from your file of tweet ids.
+    Analyze tweets.
+
+3. Data processing/transformation scripts are being kept [here](https://github.com/yuchild/galvanize_datathon2020/commit/14bf75445630b26fb33ac53e685442f1e6c846e4)
+4. etc...
+5. Follow setup [instructions](Link to file)
+
+## Featured Notebooks/Analysis/Deliverables
+* [EDA Notebook](https://github.com/yuchild/galvanize_datathon2020/blob/main/eda.ipynb)
+* [Modeling Notebook](https://github.com/yuchild/galvanize_datathon2020/blob/main/Datathon%20-%20Sentiment%20Analysis%20%26%20Data%20Cleanup.ipynb)
+* [Live Web Dashboard]-> 
+
+## Live Web Dashboard
 
 
 * Data Pipeline
@@ -128,8 +187,6 @@
         - creates column of identified language (using nltk stop words)
         - generates sentiment columns for subjects provided to the Transformer (for instance biden & trump)
         - parses the tweet users location string to assign tweet to a U.S state
-* Generate the concatenated dataframe & save to parquet
-    - python3 generate_joint_dataset.py
         
 * Run the sample script demonstrating dependency parsing using the nltk CoreNLPDependencyParser 
     - python3 sentiment_analysis/nltk_sentimenet_analysis.py
@@ -145,3 +202,20 @@ This project makes use of disparate data sources.  A demonstration of how to joi
 ### Spark relies on Java 8 so if you have Java 11 set as your current java version you can switch between them as follows  ### 
 * update-java-alternatives --list
 * sudo update-java-alternatives --set /path_to_java_version
+
+
+## Contributing Members
+
+**Team Leads (Contacts) : [Julia Sokolova](https://github.com/JuliaSokolova)**
+
+#### Other Members:
+
+| **Name** | **Slack Member ID** |
+|---------|-----------------|
+|[Mathias Darr](https://github.com/MathiasDarr)| U01DGT9BYJE |
+|[David Yu](https://github.com/yuchild) | U01DFNWBMNX |
+
+## Contact
+* If you haven't joined the Galvanize, [you can do that here](https://www.galvanize.com/).  
+* Our slack channel is private because of Datathon rules
+* Feel free to contact team leads with any questions or if you are interested in contributing!
