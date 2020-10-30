@@ -39,7 +39,7 @@ def generate_pandas_dataframe(dataframe):
 
 
 if __name__ == '__main__':
-    dataframe = create_dataframe_from_parquet('data/transformed_data')
+    dataframe = create_dataframe_from_parquet('data/concat')
     joined_dataframe = generate_pandas_dataframe(dataframe)
     plot_sentiment_analysis(joined_dataframe, 'biden')
     plot_sentiment_analysis(joined_dataframe, 'trump')

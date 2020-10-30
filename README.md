@@ -128,6 +128,8 @@
         - creates column of identified language (using nltk stop words)
         - generates sentiment columns for subjects provided to the Transformer (for instance biden & trump)
         - parses the tweet users location string to assign tweet to a U.S state
+* Generate the concatenated dataframe & save to parquet
+    - python3 generate_joint_dataset.py
         
 * Run the sample script demonstrating dependency parsing using the nltk CoreNLPDependencyParser 
     - python3 sentiment_analysis/nltk_sentimenet_analysis.py
