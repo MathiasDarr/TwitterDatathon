@@ -11,23 +11,24 @@ import plotly.graph_objects as go
 
 import pandas as pd
 
+
 def plot_sentiment_analysis(dataframe, candidate):
     fig = go.Figure(data=go.Choropleth(
         locations=dataframe['code'],  # Spatial coordinates
         z=dataframe['avg({}-sentiment)'.format(candidate)].astype(float),  # Data to be color-coded
         locationmode='USA-states',  # set of locations match entries in `locations`
-        colorscale='Reds',
+        colorscale='balance',
         colorbar_title="Millions USD",
     ))
     fig.update_layout(
-        title_text='{} sentiment analysis by state'.format(candidate.capitalize()),
+        title_text='{} sentiment by state'.format(candidate.capitalize()),
         geo_scope='usa',  # limit map scope to USA
     )
 
     fig.show()
 
-def generate_pandas_dataframe(dataframe):
 
+def generate_pandas_dataframe(dataframe):
     states_df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2011_us_ag_exports.csv')
     states_df = states_df[['code']]
     # states_df = df.select('state', 'code')
@@ -37,6 +38,7 @@ def generate_pandas_dataframe(dataframe):
     df.reset_index(drop=True, inplace=True)
 
     return states_df.join(df)
+
 
 if __name__ == '__main__':
     dataframe = create_dataframe_from_parquet('data/transformed_data')
