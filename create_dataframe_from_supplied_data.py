@@ -17,8 +17,6 @@ from sparkNLP.transformers.LocationTransformer import LocationParserTransformer
 from sparkNLP.transformers.LanguageTransformer import LanguageIdentificationTransformer
 from pyspark.ml import Pipeline
 
-data = [json.loads(line) for line in open("./data/data.jsonl", 'r', encoding='utf-8')]
-df = pd.DataFrame(data)
 
 def generate_data_entry(row):
     ## Generate a dictionary from a row of the pandas dataframe
@@ -35,20 +33,21 @@ def save_dataframe_to_parquet():
     '''
     Loads the raw data from & creates a Spark Dataframe which is then saved to Parquet
     '''
-    data = [json.loads(line) for line in open("./data/data.jsonl", 'r', encoding='utf-8')]
+    data = [json.loads(line) for line in open("./data/concatenated_abridged.jsonl", 'r', encoding='utf-8')]
     df = pd.DataFrame(data)
     data = [generate_data_entry(row) for i, row in df.iterrows()]
 
     spark = getSparkInstance()
     dataframe = spark.createDataFrame(data)
 
-    ## Delete the list of dictionaries & the pandas dataframe
+    ## Delete the list of dictionaries & the pandas dataframe to free memory
     del data
     del df
 
     ### Save the dataframe to parquet  ###
 
-    dataframe.repartition(1).write.mode('overwrite').parquet('data')
+    dataframe.repartition(1).write.mode('overwrite').parquet('provided_data')
+
     dateParserTransformer = DateParserTransformer(inputCol='date')
     language_transformer = LanguageIdentificationTransformer(inputCol='content', outputCol='language')
     location_transformer = LocationParserTransformer(inputCol='location', outputCol='parsed_location')

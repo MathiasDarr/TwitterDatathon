@@ -1,13 +1,17 @@
-from nltk.parse import CoreNLPParser
+'''
+This file demonstrates how the SentimentAnalyzer class is used to generate a sentiment score for a selection of topics
+such as bidne & trump
+
+'''
+#!/usr/bin/env python3
+
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from collections import defaultdict
 from nltk.parse.corenlp import CoreNLPDependencyParser
-# Lexical Parser
-# parser = CoreNLPParser(url='http://localhost:9000')
-# dep_parser = CoreNLPDependencyParser(url='http://localhost:9000')
 
 
-class SentimentAnalyzer():
+
+class SentimentAnalyzer:
     def __init__(self, subjects):
         '''
 
@@ -48,15 +52,28 @@ class SentimentAnalyzer():
         # sentiment_dictionary = {k: self.sid.polarity_scores(' '.join(v)) for k, v in subjects_words_dictionary.items() }
         sentiment_dictionary = {}
         for k, v in subjects_words_dictionary.items():
-            print(k)
-            print(v)
-
             sentiments = self.sid.polarity_scores(' '.join(v))
-            print(sentiments)
             sentiment_dictionary[k] = sentiments['compound']
         return sentiment_dictionary
 
-text = 'Biden is a chump .  Trump is a genius, However Biden is a liar'
+def print_sentiments(text, sentiments):
+    description = ''' With this sentiment analysis method I have defined I attempt to allow for the presence of multiple subjects in the input text.  A naive algorithm would only assign a single composite score.  My idea is to perform dependency parsing to assign a score for each subject.  The sentiment analysis algorithm depends on the presence of keywords who have been identifed as dependencies of the subject (biden or trump in example).  Some keywords I would hope wouuld not be neutral are as demonstrated in this example both 'genius' and 'corrupt' seem to be neutral in the vader SentimentIntensityAnalyzer's mind as they appear to have impact on the sentiment score.  
+    '''
 
-sentimentAnalyzer =  SentimentAnalyzer(['biden', 'trump'])
-sentimentAnalyzer.generate_sentimenet_scores('Biden is a chump .  Trump is a genius, However Biden is a liar')
+    print(description)
+    print()
+    print(text)
+    print()
+    print(sentiments)
+
+if __name__ =='__main__':
+    text = 'Biden is a chump.  Trump is a genius even though he is corrupt.  Biden is a liar'
+    sentimentAnalyzer = SentimentAnalyzer(['biden', 'trump'])
+    sentiments = sentimentAnalyzer.generate_sentimenet_scores(text)
+    print_sentiments(text, sentiments)
+
+    # biden_sentiments = sentiments['biden']
+    # trump_sentiments = sentiments['trump']
+    #
+    # print("The sentiment for {} is {}".format("Biden: {}".format(biden_sentiments)))
+    # print("The sentiment for {} is {}".format("Biden: {}".format(trump_sentiments)))

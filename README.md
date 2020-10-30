@@ -17,12 +17,12 @@
     - The kafka connect elasticsearch sink isn't working properly, this would be preferable than pushing to ES directly from the twitter-producer java application (there
     are parsing errors at the moment due to unescaped protected characters resulting in not all of the data reaching elastic search.) 
 
-* Spark  NLP analysis
+* NLP analysis
     - Utility functions for constructing spark dataframes over a range of dates & topics.  
-    - Use spark.ml library to define Transformers for feature engineering
+    - Use spark.ml library to define Transformers & Pipeline for feature engineering
         - Use the stop words provided by nltk to identify the language of the tweet based upon ratios of stop words present in the tweet content
         - Define a transformer for parsing the users location string.  The geolocation field for the majority of tweets is null, therefore the only method of determining the location of the user who sends the tweet is to parse the location string into something meaningful.  Attempt to assign each tweet a city & state (limited to the United States for the time being).    
-    - spark.ml library to define Transformers & Pipeline 
+    - Sentiment Analysis 
     
 #####  TODO: #####
     - Extend the language identification to support more languages
@@ -65,11 +65,31 @@ This project has the following dependencies
     - cp tweets_dag.py $HOME/airflow/dags/tweets_dag.py (Copy the DAG file into the airflow DAGs folder)
     - the pipeline can be run from the airflow web client, however I am certain there is a method of doing this from the CLI.
 
+### How do I perform the Sentiment Analysis?    ###
+* Download Stanford CoreNLP
+    - https://stanfordnlp.github.io/CoreNLP/download.html  
+* Run the CoreNLP server
+    - unzip the download, cd to the stanford-corenlp-x.x.x directory 
+    -  java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer \
+            -preload tokenize,ssplit,pos,lemma,ner,parse,depparse \
+            -status_port 9000 -port 9000 -timeout 15000 &  
+* Run the sample script demonstrating dependency parsing using the nltk CoreNLPDependencyParser 
+    - python3 sentiment_analysis/nltk_sentimenet_analysis.py
+#### TODO ####
+* modify the script to allow a caller to pass a sentance or tweet lengthed input text to the script instead of the hardcoded text 
+    
     
 ### How do I reproduce the analysis ? ###
    - Ensure that spark 2.4 is installed on your machine
-   - In order to create    
-
+   - In order to create 
+   - Download Stanford CoreNLP
+        - https://stanfordnlp.github.io/CoreNLP/download.html  
+   - Run the CoreNLP server
+        - unzip the download, cd to the stanford-corenlp-x.x.x directory 
+        - run 
+        java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer \
+            -preload tokenize,ssplit,pos,lemma,ner,parse,depparse \
+            -status_port 9000 -port 9000 -timeout 15000 &  
 ### Spark relies on Java 8 so if you have Java 11 set as your current java version you can switch between them as follows  ### 
 * update-java-alternatives --list
 * sudo update-java-alternatives --set /path_to_java_version
