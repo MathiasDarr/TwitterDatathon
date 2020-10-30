@@ -9,7 +9,9 @@ from sparkNLP.utils.identify_language import detect_language
 
 detect_language_udf = udf(lambda content: detect_language(content), StringType())
 
-class LanguageIdentificationTransformer(Transformer, HasInputCol, HasOutputCol, DefaultParamsReadable, DefaultParamsWritable):
+
+class LanguageIdentificationTransformer(Transformer, HasInputCol, HasOutputCol, DefaultParamsReadable,
+                                        DefaultParamsWritable):
 
     @keyword_only
     def __init__(self, inputCol=None, outputCol=None, stopwords=None):
@@ -41,6 +43,5 @@ class LanguageIdentificationTransformer(Transformer, HasInputCol, HasOutputCol, 
     def _transform(self, dataset):
         def f(s):
             return 'a'
+
         return dataset.withColumn(self.getOutputCol(), detect_language_udf(self.getInputCol()))
-
-

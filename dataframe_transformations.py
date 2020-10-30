@@ -10,6 +10,7 @@ from sparkNLP.transformers.LocationTransformer import LocationParserTransformer
 from sparkNLP.transformers.LanguageTransformer import LanguageIdentificationTransformer
 from sparkNLP.transformers.DateParserTransformer import DateParserTransformer
 from sparkNLP.utils.construct_spark_dataframe import create_dataframe_from_parquet
+from sparkNLP.transformers.SentimentAnalysisTransformer import SentimentTransformer
 
 from pyspark.ml import Pipeline
 import os
@@ -22,10 +23,12 @@ def save_transformed_data_to_parquet():
     """
 
     dateParserTransformer = DateParserTransformer(inputCol='date')
-    language_transformer = LanguageIdentificationTransformer(inputCol='content', outputCol='language')
-    location_transformer = LocationParserTransformer(inputCol='location', outputCol='parsed_location')
+    languageTransformer = LanguageIdentificationTransformer(inputCol='content', outputCol='language')
+    locationTransformer = LocationParserTransformer(inputCol='location', outputCol='parsed_location')
+    sentimentTransformer = SentimentTransformer(inputCol='content')
 
-    pipeline = Pipeline(stages=[dateParserTransformer, language_transformer, location_transformer])
+
+    pipeline = Pipeline(stages=[dateParserTransformer, languageTransformer, locationTransformer, sentimentTransformer])
 
     dataframe = create_dataframe_from_parquet('data/parquet')
 

@@ -140,5 +140,4 @@ class LocationParserTransformer(Transformer, HasInputCol, HasOutputCol, DefaultP
             except:
                 return None
 
-        location_parser_udf('location')
         return dataset.withColumn(self.getOutputCol(), location_parser_udf(self.getInputCol()))

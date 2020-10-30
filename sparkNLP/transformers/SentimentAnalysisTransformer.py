@@ -1,20 +1,17 @@
 import findspark
+
 findspark.init()
+
 from pyspark.sql.functions import udf
-from pyspark.sql.types import ArrayType, StringType
+from pyspark.sql.types import ArrayType, StringType, DoubleType
 from pyspark.ml.pipeline import Transformer
 from pyspark.ml.param.shared import HasInputCol, HasOutputCol, Param, Params, TypeConverters
 from pyspark.ml.util import DefaultParamsReadable, DefaultParamsWritable
 from pyspark import keyword_only
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-from nltk.parse import CoreNLPParser
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from collections import defaultdict
 from nltk.parse.corenlp import CoreNLPDependencyParser
-# Lexical Parser
-# parser = CoreNLPParser(url='http://localhost:9000')
-# dep_parser = CoreNLPDependencyParser(url='http://localhost:9000')
 
 
 class SentimentAnalyzer:
@@ -56,7 +53,8 @@ class SentimentAnalyzer:
     def generate_sentimenet_scores(self, text):
         subjects_words_dictionary = self.sentiment_analysis(text)
         # sentiment_dictionary = {k: self.sid.polarity_scores(' '.join(v)) for k, v in subjects_words_dictionary.items() }
-        sentiment_dictionary = {}
+
+        sentiment_dictionary = {subject: 0.0 for subject in self.subjects}
         for k, v in subjects_words_dictionary.items():
             print(k)
             print(v)
@@ -64,22 +62,7 @@ class SentimentAnalyzer:
             sentiments = self.sid.polarity_scores(' '.join(v))
             print(sentiments)
             sentiment_dictionary[k] = sentiments['compound']
-        return sentiment_dictionary
-
-
-
-
-
-@udf(returnType=StringType())
-def sentiment_analysis_udf(location):
-    '''
-    This UDF is used by the transformer to feature engineer a categorical variable.
-
-    :param location:
-    :return:
-    '''
-
-    return "hello"
+        return list(str(v) for v in sentiment_dictionary.values())
 
 
 class SentimentTransformer(Transformer, HasInputCol, HasOutputCol, DefaultParamsReadable, DefaultParamsWritable):
@@ -88,7 +71,7 @@ class SentimentTransformer(Transformer, HasInputCol, HasOutputCol, DefaultParams
     '''
 
     @keyword_only
-    def __init__(self,topics, inputCol=None, outputCol=None, stopwords=None):
+    def __init__(self, inputCol=None, outputCol=None, stopwords=None):
         '''
 
         :param topics: list of topics on which to perform sentiment analysis e.g ['biden', 'trump']
@@ -99,7 +82,8 @@ class SentimentTransformer(Transformer, HasInputCol, HasOutputCol, DefaultParams
         self._setDefault(stopwords=[])
         kwargs = self._input_kwargs
         self.setParams(**kwargs)
-        self.sentimentAnalyzer = SentimentAnalyzer()
+
+        self.sentimentAnalyzer = SentimentAnalyzer(['biden', 'trump'])
 
     @keyword_only
     def setParams(self, inputCol=None, outputCol=None, stopwords=None):
@@ -121,4 +105,10 @@ class SentimentTransformer(Transformer, HasInputCol, HasOutputCol, DefaultParams
         return self._set(outputCol=value)
 
     def _transform(self, dataset):
-        pass
+        sentiment_analysis_udf = udf(lambda content: self.sentimentAnalyzer.generate_sentimenet_scores(content), ArrayType(StringType()))
+        sentiments = sentiment_analysis_udf(self.getInputCol())
+
+        for i, subject in enumerate(self.sentimentAnalyzer.subjects):
+            dataset = dataset.withColumn('{}-sentiment'.format(subject), sentiments[i])
+
+        return dataset
