@@ -18,8 +18,8 @@ def generate_average_sentiment_dictionary(dataframe):
     return biden_sentiment_dataframe.join(trump_sentiment_dataframe, ['parsed_location'], how='full')
 
 
-dataframe = create_dataframe_from_parquet('data/transformed_data')
-joined_dataframe  = generate_average_sentiment_dictionary(dataframe)
+# dataframe = create_dataframe_from_parquet('data/transformed_data')
+# joined_dataframe  = generate_average_sentiment_dictionary(dataframe)
 
 # biden.crossJoin(trump).show()
 #

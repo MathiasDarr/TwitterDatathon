@@ -105,6 +105,8 @@
         - https://stanfordnlp.github.io/CoreNLP/download.html
     - nltk
     - boto3
+    - pandas
+    - plotly
       
 * Run the CoreNLP server
     - unzip the download, cd to the stanford-corenlp-x.x.x directory 
