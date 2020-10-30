@@ -2,20 +2,13 @@ import findspark
 findspark.init()
 import pyspark as ps
 from pyspark.sql.types import LongType, IntegerType, ArrayType, StringType, BooleanType
-from pyspark.ml.clustering import KMeans
+
 import os
-import numpy as np
 import string
 import re
-from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
-from pyspark.ml.clustering import KMeans
-from pyspark.ml.feature import CountVectorizer, IDF
 from pyspark.sql.functions import udf
-import unicodedata
-import sys
-from pyspark.sql import Row
 from nltk import wordpunct_tokenize
 
 

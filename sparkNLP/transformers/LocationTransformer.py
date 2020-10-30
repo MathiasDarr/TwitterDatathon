@@ -1,4 +1,5 @@
 import findspark
+
 findspark.init()
 from pyspark.sql.functions import udf
 from pyspark.sql.types import ArrayType, StringType
@@ -15,11 +16,12 @@ class LocationParser:
     location feature.
 
     '''
+
     def __init__(self):
         cities_df = pd.read_csv('data/us_cities.csv')
         cities_df.columns = [c.lower() for c in cities_df.columns]
         cities_df = cities_df.loc[cities_df.population > 50000]
-        self.cities_df = cities_df[['city', 'state_name', 'lat','lng','population','density']]
+        self.cities_df = cities_df[['city', 'state_name', 'lat', 'lng', 'population', 'density']]
         self.states_df = pd.read_csv('data/states.csv')
 
     def parse_location(self, location):
@@ -35,7 +37,7 @@ class LocationParser:
             return state, self.default_location_in_state(state)
 
         elif not state and found_cities:
-            if len(found_cities) ==1:
+            if len(found_cities) == 1:
                 pass
             else:
                 ### There are cities such as Springfield that are in multiple states,
@@ -62,10 +64,8 @@ class LocationParser:
 
         return 'Washington'
 
-
     def location_aliases(self):
         pass
-
 
     def parse_state(self, location):
         location = location.lower()
@@ -91,22 +91,6 @@ class LocationParser:
 
 
 locationParser = LocationParser()
-
-
-@udf(returnType=StringType())
-def location_parser_udf(location):
-    '''
-    This UDF is used by the transformer to feature engineer a categorical variable.
-
-    :param location:
-    :return:
-    '''
-
-    try:
-        state, city = locationParser.parse_location(location)
-        return state
-    except:
-        return None
 
 
 class LocationParserTransformer(Transformer, HasInputCol, HasOutputCol, DefaultParamsReadable, DefaultParamsWritable):
@@ -142,8 +126,20 @@ class LocationParserTransformer(Transformer, HasInputCol, HasOutputCol, DefaultP
         return self._set(outputCol=value)
 
     def _transform(self, dataset):
-        def f(s):
-            return 'a'
+        @udf(returnType=StringType())
+        def location_parser_udf(location):
+            '''
+            This UDF is used by the transformer to feature engineer a categorical variable.
+            Since it won't be used anywhere else it has been defined as an inner function
+            :param location:
+            :return:
+            '''
+
+            try:
+                state, city = locationParser.parse_location(location)
+                return state
+            except:
+                return None
 
         location_parser_udf('location')
         return dataset.withColumn(self.getOutputCol(), location_parser_udf(self.getInputCol()))

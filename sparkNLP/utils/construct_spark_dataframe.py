@@ -58,3 +58,21 @@ def create_tweets_dataframe(index):
     for dataf in dataframes[1:]:
         df = df.union(dataf)
     return df
+
+def create_datafram_from_parquet(directory):
+    spark = getSparkInstance()
+    parquet_files = []
+    for file in os.listdir(directory):
+        parquet_files.append('{}/{}'.format(directory, file))
+    dataframes = []
+    for file in parquet_files:
+        df = spark.read.parquet(file)
+        dataframes.append(df)
+
+    df = dataframes[0]
+    for dataf in dataframes[1:]:
+        df = df.union(dataf)
+    return df
+
+df = create_datafram_from_parquet('data')
+
