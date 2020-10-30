@@ -3,7 +3,6 @@ This file demonstrates how to join the dataset derived from the raw data & the d
 
 Also
 
-
 """
 
 import findspark
@@ -20,8 +19,8 @@ from sparkNLP.utils.construct_spark_dataframe import create_dataframe_from_parqu
 from sparkNLP.generate_sentiment_aggregation import generate_average_sentiment_dictionary
 
 
-#download_parquet_files('biden', [1028])
-#download_parquet_files('trump', [1028])
+download_parquet_files('biden', [1030])
+download_parquet_files('trump', [ 1030])
 
 
 # trump_tweets_dataframe = create_tweets_dataframe('trump')
@@ -41,6 +40,7 @@ biden_tweets_dataframe = create_tweets_dataframe('biden')
 pipeline_model = pipeline.fit(biden_tweets_dataframe)
 biden_tweets_dataframe = pipeline_model.transform(biden_tweets_dataframe)
 biden_tweets_dataframe = biden_tweets_dataframe.filter(biden_tweets_dataframe['parsed_location'] != 'null')
+
 
 
 

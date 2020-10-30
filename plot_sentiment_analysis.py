@@ -24,7 +24,6 @@ def plot_sentiment_analysis(dataframe, candidate):
         title_text='{} sentiment by state'.format(candidate.capitalize()),
         geo_scope='usa',  # limit map scope to USA
     )
-
     fig.show()
 
 
@@ -36,7 +35,6 @@ def generate_pandas_dataframe(dataframe):
     df = df[df['parsed_location'] != 'District of Columbia']
     df = df.sort_values('parsed_location')
     df.reset_index(drop=True, inplace=True)
-
     return states_df.join(df)
 
 

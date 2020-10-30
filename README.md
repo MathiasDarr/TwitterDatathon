@@ -42,9 +42,9 @@
         - Apply a spark streaming model which uses kafka as an input data source
         - The Spark job should run on EMR
         - Airflow DAG for generating a model every hour or every day.  
+        
 * Sentiment Ananlys data visualization
-    - Map of united states with states colored according to the average sentiment for each candidate
-
+    - Use Plotly Choropleth plot of the United States to plot average sentiment of each candidate per state
 
 
 ### Running the twitter streaming pipeline  ### 

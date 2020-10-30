@@ -13,7 +13,6 @@ from nltk.parse.corenlp import CoreNLPDependencyParser
 class SentimentAnalyzer:
     def __init__(self, subjects):
         """
-
         :param subjects: List of subjects in which to perform sentiment analysis on e.g ['biden', 'trump']
         """
         self.subjects = subjects

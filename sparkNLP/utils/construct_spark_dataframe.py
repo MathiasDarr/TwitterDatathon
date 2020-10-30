@@ -7,7 +7,7 @@ import boto3
 from sparkNLP.utils.sparkSession import getSparkInstance
 import os
 
-def download_parquet_files(index, days):
+def download_parquet_files(index):
     '''
     This function downloads parquet files from the specified topic & specified date range
 
@@ -23,17 +23,15 @@ def download_parquet_files(index, days):
                            file.key.split('.')[-1] == 'parquet']
     client = boto3.client('s3')
 
+    folders = {'/'.join(file.split('/')[:2]) for file in tweet_parquet_files}
+    for folder in folders:
+        full_path = 'tmp/{}'.format(folder)
+        if not os.path.exists(full_path):
+            os.makedirs(full_path)
+
     for file in tweet_parquet_files:
-        day = file.split('/')[1]
-        hour = file.split('/')[2][:2]
-        folder = 'tmp/{}/{}/{}'.format(index, day, hour)
-        if not os.path.exists(folder):
-            os.makedirs(folder)
-        for day in days:
-            client.download_file(bucket, file, '{}/{}.parquet'.format(folder, day, hour))
+        client.download_file(bucket, file, 'tmp/{}.parquet'.format(file))
 
-
-# download_parquet_files('trump',[1028])
 
 
 def create_tweets_dataframe(index):
@@ -64,6 +62,8 @@ def create_tweets_dataframe(index):
     return df
 
 
+def create_dataframe_from_parquet():
+    pass
     # return concatenate_dataframes(dataframes)
 
 
