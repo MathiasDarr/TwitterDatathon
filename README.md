@@ -60,7 +60,7 @@ The purpose of this project is use Twitter data from 3 days 30th September, 1st 
 
 ## Featured Notebooks/Analysis/Deliverables
 * [EDA Notebook](https://github.com/yuchild/galvanize_datathon2020/blob/main/eda.ipynb)
-* [Modeling Notebook](https://github.com/yuchild/galvanize_datathon2020/blob/main/Datathon%20-%20Sentiment%20Analysis%20%26%20Data%20Cleanup.ipynb)
+* [Modeling Notebook](https://github.com/MathiasDarr/TwitterDatathon/blob/master/eda/Predicting_tweet_influence.ipynb)
 * [Live Web Dashboard]-> 
 
 ## Live Web Dashboard
