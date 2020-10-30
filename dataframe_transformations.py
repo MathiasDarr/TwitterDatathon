@@ -1,5 +1,5 @@
 """
-This file demonstrates how to use the spark.ml Pipeline to perform data transformations
+This script makes use of the spark.ml Pipeline API & custom transformers
 """
 # !/usr/bin/env python3
 import findspark
@@ -31,8 +31,7 @@ def save_transformed_data_to_parquet():
     pipeline = Pipeline(stages=[dateParserTransformer, languageTransformer, locationTransformer,sentimentTransformer])
 
     dataframe = create_dataframe_from_parquet('data/parquet')
-    dataframe = dataframe.limit(10000)
-    # dataframe = dataframe.limit(100)
+    # dataframe = dataframe.limit(10000)  If the pipeline is taking too long comment this out
     pipeline_model = pipeline.fit(dataframe)
     dataframe = pipeline_model.transform(dataframe)
     print("THE NUMBER OF ROWS IN THE DATAFRAME IS {}".format(dataframe.count()))

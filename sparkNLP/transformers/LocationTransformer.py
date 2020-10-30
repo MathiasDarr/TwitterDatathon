@@ -18,11 +18,11 @@ class LocationParser:
     '''
 
     def __init__(self):
-        cities_df = pd.read_csv('data/us_cities.csv')
+        cities_df = pd.read_csv('us_cities.csv')
         cities_df.columns = [c.lower() for c in cities_df.columns]
         cities_df = cities_df.loc[cities_df.population > 50000]
         self.cities_df = cities_df[['city', 'state_name', 'lat', 'lng', 'population', 'density']]
-        self.states_df = pd.read_csv('data/states.csv')
+        self.states_df = pd.read_csv('states.csv')
 
     def parse_location(self, location):
         state = self.parse_state(location)

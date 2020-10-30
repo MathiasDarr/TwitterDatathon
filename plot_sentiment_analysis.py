@@ -18,7 +18,7 @@ def plot_sentiment_analysis(dataframe, candidate):
         z=dataframe['avg({}-sentiment)'.format(candidate)].astype(float),  # Data to be color-coded
         locationmode='USA-states',  # set of locations match entries in `locations`
         colorscale='balance',
-        colorbar_title="Millions USD",
+        colorbar_title="Sentiment",
     ))
     fig.update_layout(
         title_text='{} sentiment by state'.format(candidate.capitalize()),
