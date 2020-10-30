@@ -17,16 +17,11 @@
     - The kafka connect elasticsearch sink isn't working properly, this would be preferable than pushing to ES directly from the twitter-producer java application (there
     are parsing errors at the moment due to unescaped protected characters resulting in not all of the data reaching elastic search.) 
 
-* Feature Engineering
-    - Language identification making use of the stop words provided by nltk to identify the language of the tweet based upon ratios of stop words present
-    in the tweet content
-    - The geolocation field for the majority of tweets is null, therefore the only method of determining the location of the user who sends the tweet is 
-    to parse the location string into something meaningful.  Attempt to assign each tweet a city & state (limited to the United States for the time being.)     
-
 * Spark  NLP analysis
     - Utility functions for constructing spark dataframes over a range of dates & topics.  
-    - Use the stop words provided by nltk to identify the language of the tweet based upon ratios of stop words present
-    in the tweet content
+    - Use spark.ml library to define Transformers for feature engineering
+        - Use the stop words provided by nltk to identify the language of the tweet based upon ratios of stop words present in the tweet content
+        - Define a transformer for parsing the users location string.  The geolocation field for the majority of tweets is null, therefore the only method of determining the location of the user who sends the tweet is to parse the location string into something meaningful.  Attempt to assign each tweet a city & state (limited to the United States for the time being).    
     - spark.ml library to define Transformers & Pipeline 
     
 #####  TODO: #####
@@ -69,9 +64,11 @@ This project has the following dependencies
     - airflow scheduler
     - cp tweets_dag.py $HOME/airflow/dags/tweets_dag.py (Copy the DAG file into the airflow DAGs folder)
     - the pipeline can be run from the airflow web client, however I am certain there is a method of doing this from the CLI.
+
     
 ### How do I reproduce the analysis ? ###
-    
+   - Ensure that spark 2.4 is installed on your machine
+   - In order to create    
 
 ### Spark relies on Java 8 so if you have Java 11 set as your current java version you can switch between them as follows  ### 
 * update-java-alternatives --list

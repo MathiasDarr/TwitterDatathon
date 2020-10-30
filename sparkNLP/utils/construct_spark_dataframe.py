@@ -20,9 +20,7 @@ def download_parquet_files(index, days):
     for file in tweet_parquet_files:
         day = file.split('/')[1]
         hour = file.split('/')[2][:2]
-
         folder = 'tmp/{}/{}/{}'.format(index,day,hour)
-
         if not os.path.exists(folder):
             os.makedirs(folder)
         for day in days:

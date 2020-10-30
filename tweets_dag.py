@@ -57,12 +57,16 @@ def deleteElasticSearchTweets():
     es.delete_by_query(index="tweets", body={"query": {"match_all": {}}})
 
 
-def generate_directory_name(topic):
+def generate_directory_name_infer_time(index):
     current_time = datetime.now()
-    hour = '0' + str(current_time.hour) if current_time.hour < 10 else current_time.hour
+    # hour = '0' + str(current_time.hour) if current_time.hour < 10 else current_time.hour
     day = '0' + str(current_time.day) if current_time.day < 10 else current_time.day
     month = '0'+str(current_time.month) if current_time.month < 10 else current_time.month
-    return 'tmp/{}/{}{}/{}'.format(topic, month, day, hour)
+    return 'tmp/{}/{}{}'.format(index, month, day)
+
+
+def generate_directory_name_supply(index, day, month):
+    return 'tmp/{}/{}{}'.format(index, month, day)
 
 
 def scanElasticSearchTweets(index):
@@ -70,13 +74,18 @@ def scanElasticSearchTweets(index):
     tweets = [tweet['_source'] for tweet in tweets_scan]
     spark = getSparkInstance()
     sc = spark.sparkContext
-    df = spark.read.json(sc.parallelize(tweets))
-    directory_name = generate_directory_name(index)
+    dataframe = spark.read.json(sc.parallelize(tweets))
+    directory_name = generate_directory_name_infer_time(index)
+    upload_dataframe_to_s3(dataframe, index, directory_name)
+
+
+def upload_dataframe_to_s3(dataframe, index, directory_name):
     s3 = boto3.client('s3')
-    df.repartition(1).write.mode('overwrite').parquet(directory_name)
+    dataframe.repartition(1).write.mode('overwrite').parquet(directory_name)
     for root, dirs, files in os.walk(directory_name):
         for file in files:
             s3.upload_file(os.path.join(root, file), "datathon-election-tweets", directory_name[4:]+ file)
+
 
 
 default_args = {
