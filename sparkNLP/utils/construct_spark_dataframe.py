@@ -1,6 +1,7 @@
 import os
 import boto3
 from sparkNLP.utils.sparkSession import getSparkInstance
+import os
 
 def download_parquet_files(index, days):
     '''
@@ -14,24 +15,24 @@ def download_parquet_files(index, days):
     s3 = boto3.resource('s3')
     bucket = 'datathon-election-tweets'
     tweets_bucket = s3.Bucket(bucket)
-    tweet_parquet_files = [file.key for file in list(tweets_bucket.objects.filter(Prefix='{}/'.format(index)).all()) if file.key.split('.')[-1]=='parquet']
+    tweet_parquet_files = [file.key for file in list(tweets_bucket.objects.filter(Prefix='{}/'.format(index)).all()) if
+                           file.key.split('.')[-1] == 'parquet']
     client = boto3.client('s3')
 
     for file in tweet_parquet_files:
         day = file.split('/')[1]
         hour = file.split('/')[2][:2]
-        folder = 'tmp/{}/{}/{}'.format(index,day,hour)
+        folder = 'tmp/{}/{}/{}'.format(index, day, hour)
         if not os.path.exists(folder):
             os.makedirs(folder)
         for day in days:
             client.download_file(bucket, file, '{}/{}.parquet'.format(folder, day, hour))
 
+
 # download_parquet_files('trump',[1028])
 
 
-
 def create_tweets_dataframe(index):
-
     '''
     This function constructs a spark dataframe with the locally downloaded parquet files (downloaded from the download_parquet_files)
     and the index from which to construct the dataframe.
@@ -44,7 +45,7 @@ def create_tweets_dataframe(index):
     parquet_files = []
     directory = 'tmp/{}'.format(index)
     for folder in os.listdir(directory):
-        for file in os.listdir('{}/{}/'.format('tmp/{}'.format(index),folder)):
+        for file in os.listdir('{}/{}/'.format('tmp/{}'.format(index), folder)):
             parquet_files.append('tmp/{}/{}/{}'.format(index, folder, file))
 
     # for file in os.listdir('tmp/'+folder):
@@ -59,20 +60,17 @@ def create_tweets_dataframe(index):
         df = df.union(dataf)
     return df
 
-def create_datafram_from_parquet(directory):
+
+def create_dataframe_from_parquet(directory):
     spark = getSparkInstance()
-    parquet_files = []
-    for file in os.listdir(directory):
-        parquet_files.append('{}/{}'.format(directory, file))
-    dataframes = []
-    for file in parquet_files:
-        df = spark.read.parquet(file)
-        dataframes.append(df)
+    parquet_files = [file for file in os.listdir(directory) if file.split('.')[-1] == 'parquet']
+    parquet_files = ['{}/{}'.format(directory, file) for file in parquet_files]
 
-    df = dataframes[0]
-    for dataf in dataframes[1:]:
-        df = df.union(dataf)
-    return df
+    dataframes = [spark.read.parquet(file) for file in parquet_files]
+    return dataframes[0]
+    # ### This is a little sloppy to me, is there a better way to do this w/ a list comprenhension maybe..?
+    # for dataf in dataframes:
+    #     df = df.union(dataf)
+    # return df
 
-df = create_datafram_from_parquet('data')
-
+df = create_dataframe_from_parquet('data/parquet')

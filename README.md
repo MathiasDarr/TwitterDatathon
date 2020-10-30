@@ -65,6 +65,20 @@ This project has the following dependencies
     - cp tweets_dag.py $HOME/airflow/dags/tweets_dag.py (Copy the DAG file into the airflow DAGs folder)
     - the pipeline can be run from the airflow web client, however I am certain there is a method of doing this from the CLI.
 
+#### TODO ####
+* modify the script to allow a caller to pass a sentance or tweet lengthed input text to the script instead of the hardcoded text 
+    
+    
+## Reproduction of analysis ##
+#### Generate the dataset #### 
+* Unzip the provided dataset into a 'data' folder in the root directory
+* Run the script to generate a Spark dataframe & save to data to parquet.  
+    - python3 create_dataframe_from_supplied_data.py 
+    - dataframe can be loaded from parquet as demonstrated in the load_dataframe_from_parquet.py file. 
+* Transform the data 
+    - the dataframe_transformations.py script demonstrates how to use the spark.ml Pipeline to perform transformations 
+    - python3 dataframe_transformations.py
+    
 ### How do I perform the Sentiment Analysis?    ###
 * Download Stanford CoreNLP
     - https://stanfordnlp.github.io/CoreNLP/download.html  
@@ -75,11 +89,8 @@ This project has the following dependencies
             -status_port 9000 -port 9000 -timeout 15000 &  
 * Run the sample script demonstrating dependency parsing using the nltk CoreNLPDependencyParser 
     - python3 sentiment_analysis/nltk_sentimenet_analysis.py
-#### TODO ####
-* modify the script to allow a caller to pass a sentance or tweet lengthed input text to the script instead of the hardcoded text 
-    
-    
-### How do I reproduce the analysis ? ###
+
+
    - Ensure that spark 2.4 is installed on your machine
    - In order to create 
    - Download Stanford CoreNLP

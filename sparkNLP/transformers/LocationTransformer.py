@@ -27,7 +27,6 @@ class LocationParser:
     def parse_location(self, location):
         state = self.parse_state(location)
         found_cities = self.parse_city(location)
-        print("{} {}".format(state, found_cities))
         if state and found_cities:
             ###
             for city, s in found_cities:
